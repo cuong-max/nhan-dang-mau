@@ -1,0 +1,11 @@
+scikit-learn>=1.4
+pandas
+numpy
+matplotlib
+seaborn
+python-docx
+# Bài tập 2 (Jupyter notebook)
+jupyter
+nbconvert
+nbformat
+ipykernel

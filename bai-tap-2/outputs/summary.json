@@ -1,0 +1,91 @@
+{
+  "dataset": {
+    "name": "Breast Cancer Wisconsin (Diagnostic)",
+    "n_samples": 569,
+    "n_features": 30,
+    "feature_names_sample": [
+      "mean radius",
+      "mean texture",
+      "mean perimeter",
+      "mean area",
+      "mean smoothness",
+      "mean compactness",
+      "mean concavity",
+      "mean concave points"
+    ],
+    "positive_class": "malignant (y=1)",
+    "class_counts": {
+      "benign": 357,
+      "malignant": 212
+    },
+    "class_ratio": {
+      "benign": 0.6274165202108963,
+      "malignant": 0.37258347978910367
+    }
+  },
+  "preprocessing": {
+    "test_size": 0.25,
+    "n_train": 426,
+    "n_test": 143,
+    "scaler": "StandardScaler (fit on train)"
+  },
+  "hyperparameters": {
+    "learning_rate": 0.1,
+    "max_iter": 5000,
+    "tol": 1e-08,
+    "n_iter_run": 4690,
+    "converged": true,
+    "final_train_log_loss": 0.07409472286024121
+  },
+  "metrics": {
+    "numpy": {
+      "Accuracy": 0.9790209790209791,
+      "Precision": 1.0,
+      "Recall": 0.9433962264150944,
+      "F1": 0.970873786407767,
+      "ROC-AUC": 0.9983228511530398,
+      "LogLoss": 0.07528094264456647
+    },
+    "sklearn": {
+      "Accuracy": 0.9790209790209791,
+      "Precision": 1.0,
+      "Recall": 0.9433962264150944,
+      "F1": 0.970873786407767,
+      "ROC-AUC": 0.9983228511530398,
+      "LogLoss": 0.07529379287839688
+    }
+  },
+  "confusion_matrix": {
+    "numpy": [
+      [
+        90,
+        0
+      ],
+      [
+        3,
+        50
+      ]
+    ],
+    "sklearn": [
+      [
+        90,
+        0
+      ],
+      [
+        3,
+        50
+      ]
+    ]
+  },
+  "params": {
+    "weight_correlation": 0.999993976697419,
+    "bias_numpy": -0.46392258594451874,
+    "bias_sklearn": -0.4641350095252151
+  },
+  "misclassification": {
+    "numpy": 3,
+    "sklearn": 3,
+    "common": 3,
+    "n_test": 143
+  }
+}
