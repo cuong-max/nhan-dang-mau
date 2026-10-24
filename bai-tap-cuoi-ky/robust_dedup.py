@@ -7,7 +7,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
-df = pd.read_csv("results/wine_dataset.csv"); d2 = df.drop_duplicates(); print(len(df), "->", len(d2))
+# đọc dữ liệu GỐC (chưa loại trùng) từ data/ – results/wine_dataset.csv đã được loại trùng
+df = pd.concat([pd.read_csv(f"data/winequality-{k}.csv", sep=";").assign(is_red=int(k == "red")) for k in ("red", "white")], ignore_index=True)
+d2 = df.drop_duplicates(); print(len(df), "->", len(d2))
 cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=42); rows = []
 M = {"Cơ sở: k-NN thô": Pipeline([("c", KNeighborsClassifier(5))]),
      "SVM RBF (C=10, cân bằng lớp)": Pipeline([("s", StandardScaler()), ("c", SVC(C=10, class_weight="balanced"))]),

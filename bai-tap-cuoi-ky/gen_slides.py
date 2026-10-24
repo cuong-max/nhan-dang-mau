@@ -8,6 +8,7 @@ from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION
+from members import MEMBERS, GROUP
 
 hexc = RGBColor.from_string
 WINE, INK, ROSE, GREY, WHITE, BLUE, SOFT = hexc("5A1E2B"), hexc("2B2024"), hexc("F6EDEF"), hexc("6B5F63"), hexc("FFFFFF"), hexc("3A7CA5"), hexc("E8C9CF")
@@ -55,7 +56,7 @@ def table(sl, rows, x, y, widths, size=14):
 sl = prs.slides.add_slide(blank); bg(sl, WINE)
 tb(sl, .8, 1.7, 11.7, 1.6, "Nhận dạng rượu vang chất lượng cao", 46, True, WHITE)
 tb(sl, .8, 3.3, 11.7, 1, "Từ 11 chỉ tiêu hóa lý – bộ dữ liệu Wine Quality (UCI): phương án cơ sở so với cải tiến", 22, False, SOFT)
-tb(sl, .8, 5.6, 11.7, 1.2, ["Bài tập nhóm cuối kỳ – Học phần Nhận dạng mẫu", "Nhóm ….. | Giảng viên: ……"], 16, False, SOFT)
+tb(sl, .8, 5.6, 11.7, 1.2, ["Bài tập nhóm cuối kỳ – Học phần Nhận dạng mẫu", GROUP, "Giảng viên: ……"], 16, False, SOFT)
 sl.notes_slide.notes_text_frame.text = "Giới thiệu nhóm và đề tài."
 
 # 2 Bài toán
@@ -99,13 +100,13 @@ for i, n in enumerate(order["Mô hình"]):
     pt = pl.series[0].points[i]; pt.format.fill.solid(); pt.format.fill.fore_color.rgb = BLUE if n.startswith("Cơ sở") else WINE
 stat(sl, 8.7, 1.6, 4, f"{n3(b['f1'])} → {n3(s['f1'])}", "F1: k-NN thô → SVM RBF")
 odr0 = row("Hồi quy thứ bậc: SVR điểm → ngưỡng")
-stat(sl, 8.7, 3.7, 4, f"SVR thứ bậc: {n3(odr0['f1'])}", "F1 cao nhất; mọi cải tiến p < 0,001")
+stat(sl, 8.7, 3.7, 4, n3(odr0['f1']), "F1 cao nhất: SVR thứ bậc; mọi cải tiến p < 0,001")
 tb(sl, 8.7, 5.8, 4, .8, "Xanh: cơ sở; đỏ rượu: cải tiến. F1 ở ngưỡng mặc định.", 13, False, GREY)
 
 # 7 Accuracy bẫy
 dm = row("Tham chiếu: luôn đoán lớp đa số")
 sl = slide("Vì sao không dùng accuracy", "Accuracy của lớp đa số cao hơn SVM.")
-table(sl, [["Mô hình", "Accuracy", "Recall", "F1"]] + [[short(n), f"{row(n)['acc']:.1%}", f"{row(n)['rec']:.1%}", n3(row(n)["f1"])] for n in ["Tham chiếu: luôn đoán lớp đa số", BASE, "k-NN + chuẩn hóa", SVM]], .6, 1.7, [3.6, 1.8, 1.6, 1.4], 16)
+table(sl, [["Mô hình", "Accuracy", "Recall", "F1"]] + [[short(n), f"{row(n)['acc']:.1%}".replace(".", ","), f"{row(n)['rec']:.1%}".replace(".", ","), n3(row(n)["f1"])] for n in ["Tham chiếu: luôn đoán lớp đa số", BASE, "k-NN + chuẩn hóa", SVM]], .6, 1.7, [3.6, 1.8, 1.6, 1.4], 16)
 card(sl, 9.3, 1.7, 3.4, 3.6); tb(sl, 9.5, 1.9, 3.0, 3.3, ["Đoán 'thường' cho mọi chai:", f"accuracy {dm['acc']:.0%}", "nhưng không tìm được chai ngon nào"], 18, False, INK)
 bullets(sl, .6, 4.6, 8.4, 2, ["Chuẩn hóa: F1 0,277 → 0,452 (SO₂ ~ 10² lấn át độ cồn ~ 10)", "Thêm cân bằng lớp (SVM): recall 36% → 81%"], 18)
 
@@ -173,6 +174,6 @@ tb(sl, .8, 5.6, 11.5, 1, "Phù hợp làm công cụ sàng lọc hỗ trợ, ch�
 
 # 15 Phân công
 sl = slide("Phân công và tài liệu tham khảo", "Điền tên thành viên.")
-table(sl, [["Thành viên", "Nhiệm vụ", "Đóng góp"], ["…… (nhóm trưởng)", "EDA, phát hiện bản ghi trùng", "25%"], ["……", "Cơ sở, tiền xử lý, CV", "25%"], ["……", "Cải tiến, kiểm định, phân tích lỗi", "25%"], ["……", "Demo, báo cáo, slide", "25%"]], .6, 1.6, [2.4, 3.5, 1.3])
+table(sl, [["Thành viên", "Nhiệm vụ", "Đóng góp"]] + [[m["name"], m["short"], m["share"]] for m in MEMBERS], .6, 1.6, [2.6, 3.4, 1.2], 16)
 card(sl, 8.2, 1.6, 4.5, 4.8); tb(sl, 8.4, 1.75, 4.1, 4.5, ["[1] Cortez et al. 2009. Wine Quality, UCI: archive.ics.uci.edu/dataset/186", "[2] Cortez et al. 2009. Decision Support Systems 47(4)", "[3] Pedregosa et al. 2011. scikit-learn, JMLR 12", "[4] Nadeau & Bengio 2003. Machine Learning 52"], 13)
 prs.save("Slide_NhanDangMau.pptx"); print("ok", len(prs.slides))

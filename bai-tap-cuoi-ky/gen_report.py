@@ -7,6 +7,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from members import MEMBERS
 
 R, F = Path("results"), Path("figures")
 cmp_ = pd.read_csv(R / "model_comparison.csv"); sig = pd.read_csv(R / "significance_vs_baseline.csv").set_index("Mô hình")
@@ -64,7 +65,9 @@ P("BÁO CÁO BÀI TẬP NHÓM CUỐI KỲ", True, align=C, size=18); P("Học ph
 P("NHẬN DẠNG RƯỢU VANG CHẤT LƯỢNG CAO TỪ CHỈ TIÊU HÓA LÝ", True, align=C, size=16)
 P("Bộ dữ liệu Wine Quality (UCI) – so sánh phương án cơ sở với các phương án cải tiến", italic=True, align=C)
 for _ in range(5): d.add_paragraph()
-P("Nhóm thực hiện: Nhóm ..... (danh sách thành viên ở Mục 9)", align=C); P("Giảng viên hướng dẫn: ........................................", align=C); P("Năm học 2026", align=C)
+P("Nhóm thực hiện:", True, align=C)
+for m in MEMBERS: P(f"{m['name']} – {m['mssv']}", align=C)
+P("Giảng viên hướng dẫn: ........................................", align=C); P("Năm học 2026", align=C)
 d.add_page_break()
 
 # ---------- Tóm tắt ----------
@@ -248,12 +251,9 @@ for c in ["pip install -r requirements.txt", "python run_experiments.py     # kh
 
 # ---------- 9 ----------
 H("9. Phân công và tự đánh giá đóng góp")
-P("(Nhóm điền họ tên, MSSV và điều chỉnh tỉ lệ theo thực tế; tổng = 100%.)", italic=True)
-table([["1", "....................", "Nhóm trưởng; thu thập, khảo sát dữ liệu (EDA), phát hiện bản ghi trùng", "25%", "...."],
-       ["2", "....................", "Cài đặt phương án cơ sở, tiền xử lý, quy trình kiểm định chéo", "25%", "...."],
-       ["3", "....................", "Cải tiến mô hình (SVM, cân bằng lớp, ngưỡng), kiểm định thống kê, phân tích lỗi", "25%", "...."],
-       ["4", "....................", "Demo Streamlit, báo cáo, slide và thuyết trình", "25%", "...."]],
+table([[str(i + 1), f"{m['name']}\n{m['mssv']}", m["task"], m["share"], "...."] for i, m in enumerate(MEMBERS)],
       ["TT", "Họ tên / MSSV", "Nhiệm vụ", "Đóng góp", "Tự đánh giá (/10)"], [1, 3.5, 7.2, 2, 2.3])
+P("Tổng đóng góp: 100%. Hai thành viên cùng thảo luận chọn phương án và thống nhất kết luận.", italic=True)
 
 # ---------- TLTK ----------
 H("Tài liệu tham khảo và nguồn")
