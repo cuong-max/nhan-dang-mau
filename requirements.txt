@@ -9,3 +9,8 @@ jupyter
 nbconvert
 nbformat
 ipykernel
+# Bài tập cuối kỳ (demo + sinh slide)
+scipy
+joblib
+streamlit
+python-pptx

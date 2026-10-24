@@ -1,0 +1,8 @@
+{
+ "Cơ sở: k-NN (k=5, không chuẩn hóa)": 0.6853676457234,
+ "k-NN + chuẩn hóa": 0.8256560820396529,
+ "Hồi quy logistic (cân bằng lớp, tuned)": 0.8282079240902855,
+ "Random Forest (cân bằng lớp)": 0.8599844498561886,
+ "Gradient Boosting (HistGB)": 0.8497050093579036,
+ "SVM RBF (cân bằng lớp, tuned)": 0.8478789479697798
+}

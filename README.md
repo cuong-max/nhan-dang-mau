@@ -16,6 +16,13 @@ nhan-dang-mau/
 │  ├─ src/                                     #   build_notebook.py, generate_report_vi.py
 │  ├─ outputs/                                 #   summary.json, figures/*.png
 │  └─ BaoCao_TieuLuan_LogisticRegression_TiengViet.docx
+├─ bai-tap-cuoi-ky/                            # Bài tập nhóm cuối kỳ — Nhận dạng mẫu
+│  ├─ run_experiments.py, robust_dedup.py      #   code thí nghiệm
+│  ├─ app.py                                   #   demo Streamlit
+│  ├─ data/  results/  figures/                #   dữ liệu UCI, kết quả, hình
+│  ├─ BaoCao_NhanDangMau.docx / .pdf           #   báo cáo
+│  ├─ Slide_NhanDangMau.pptx                   #   slide thuyết trình
+│  └─ PhanCong_TuDanhGia.docx                  #   phân công & tự đánh giá
 ├─ venv/                                       # môi trường ảo dùng chung
 ├─ requirements.txt                            # thư viện dùng chung
 ├─ .gitignore                                  # bỏ qua venv/ khi push git
@@ -120,3 +127,39 @@ jupyter nbconvert --to notebook --execute --inplace bai-tap-2\logistic_regressio
 ```powershell
 python bai-tap-2\src\generate_report_vi.py
 ```
+
+---
+
+## Bài tập nhóm cuối kỳ — Nhận dạng rượu vang chất lượng cao (Wine Quality)
+
+**Đề:** Mỗi nhóm thực hiện một bài toán nhận dạng mẫu trên dữ liệu thực tế; có phương án cơ sở,
+ít nhất một phương án cải tiến, phân tích lỗi, hạn chế; nộp báo cáo, slide, mã nguồn, bảng phân công; điểm cộng cho demo.
+
+- **Dữ liệu:** Wine Quality (UCI, ID 186, Cortez et al. 2009) — rượu đỏ 1.599 + trắng 4.898;
+  loại 1.177 bản ghi trùng → 5.320 mẫu, 11 chỉ tiêu hóa lý + loại rượu.
+- **Bài toán:** nhận dạng rượu **chất lượng cao** (điểm cảm quan ≥ 7, chiếm 19%).
+- **Cơ sở:** k-NN trên dữ liệu thô, Naive Bayes. **Cải tiến:** chuẩn hóa, cân bằng lớp, SVM RBF, logistic,
+  LDA/QDA, RF, Gradient Boosting, chọn đặc trưng, hồi quy thứ bậc (SVR), chọn ngưỡng.
+- **Đánh giá:** CV phân tầng 5×3 lồng nhau (nested), t-test hiệu chỉnh Nadeau–Bengio.
+
+**Kết quả chính:**
+
+| Mô hình | F1 (lớp chất lượng cao) | Recall | AUC |
+|---|---|---|---|
+| Cơ sở: k-NN thô | 0.277 | 0.210 | 0.692 |
+| SVM RBF + chuẩn hóa + cân bằng lớp | 0.548 | 0.809 | 0.848 |
+| **Hồi quy thứ bậc SVR → ngưỡng** | **0.570** | 0.690 | 0.852 |
+
+- Phần lớn lỗi nằm ở ranh giới điểm 6/7; bản ghi trùng làm thổi phồng F1 của Random Forest (0.665 → 0.450 khi loại trùng).
+
+**Chạy** (từ thư mục `bai-tap-cuoi-ky`):
+
+```powershell
+cd bai-tap-cuoi-ky
+python run_experiments.py      # ~10 phút → results/, figures/, model_best.joblib
+python robust_dedup.py
+python gen_report.py; python gen_slides.py
+streamlit run app.py           # demo tại http://localhost:8501
+```
+
+Chi tiết: [`bai-tap-cuoi-ky/README.md`](bai-tap-cuoi-ky/README.md).

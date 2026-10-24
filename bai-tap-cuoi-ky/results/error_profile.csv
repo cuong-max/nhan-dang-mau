@@ -1,0 +1,13 @@
+,TP,FN,FP,TN
+fixed acidity,-0.17,0.17,-0.07,0.06
+volatile acidity,-0.32,-0.2,-0.42,0.25
+citric acid,0.15,0.0,0.18,-0.11
+residual sugar,-0.28,0.28,-0.3,0.17
+chlorides,-0.41,0.01,-0.34,0.23
+free sulfur dioxide,0.02,0.02,-0.06,0.01
+total sulfur dioxide,-0.19,0.08,-0.19,0.11
+density,-0.82,0.31,-0.65,0.43
+pH,0.13,-0.05,0.03,-0.04
+sulphates,0.08,0.08,-0.03,-0.01
+alcohol,1.11,-0.22,0.76,-0.56
+is_red,-0.2,-0.03,-0.23,0.14
