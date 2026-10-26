@@ -8,7 +8,7 @@ from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION
-from members import MEMBERS, GROUP
+from members import MEMBERS, GROUP, SCHOOL, ADVISOR
 
 hexc = RGBColor.from_string
 WINE, INK, ROSE, GREY, WHITE, BLUE, SOFT = hexc("5A1E2B"), hexc("2B2024"), hexc("F6EDEF"), hexc("6B5F63"), hexc("FFFFFF"), hexc("3A7CA5"), hexc("E8C9CF")
@@ -56,7 +56,7 @@ def table(sl, rows, x, y, widths, size=14):
 sl = prs.slides.add_slide(blank); bg(sl, WINE)
 tb(sl, .8, 1.7, 11.7, 1.6, "Nhận dạng rượu vang chất lượng cao", 46, True, WHITE)
 tb(sl, .8, 3.3, 11.7, 1, "Từ 11 chỉ tiêu hóa lý – bộ dữ liệu Wine Quality (UCI): phương án cơ sở so với cải tiến", 22, False, SOFT)
-tb(sl, .8, 5.6, 11.7, 1.2, ["Bài tập nhóm cuối kỳ – Học phần Nhận dạng mẫu", GROUP, "Giảng viên: ……"], 16, False, SOFT)
+tb(sl, .8, 5.6, 11.7, 1.2, ["Bài tập nhóm cuối kỳ – Học phần Nhận dạng mẫu – Học viện Công nghệ Bưu chính Viễn thông", GROUP, f"Giảng viên hướng dẫn: {ADVISOR}"], 16, False, SOFT)
 sl.notes_slide.notes_text_frame.text = "Giới thiệu nhóm và đề tài."
 
 # 2 Bài toán

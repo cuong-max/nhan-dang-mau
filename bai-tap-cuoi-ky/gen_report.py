@@ -7,7 +7,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
-from members import MEMBERS
+from members import MEMBERS, SCHOOL, ADVISOR
 
 R, F = Path("results"), Path("figures")
 cmp_ = pd.read_csv(R / "model_comparison.csv"); sig = pd.read_csv(R / "significance_vs_baseline.csv").set_index("Mô hình")
@@ -59,7 +59,7 @@ def fig(name, caption, w=15.5):
     d.add_picture(str(F / name), width=Cm(w)); d.paragraphs[-1].alignment = C; cap(caption)
 
 # ---------- Bìa ----------
-P("TRƯỜNG ........................................", True, align=C); P("KHOA ........................................", True, align=C)
+P(SCHOOL, True, align=C)
 for _ in range(4): d.add_paragraph()
 P("BÁO CÁO BÀI TẬP NHÓM CUỐI KỲ", True, align=C, size=18); P("Học phần: Nhận dạng mẫu", align=C); d.add_paragraph()
 P("NHẬN DẠNG RƯỢU VANG CHẤT LƯỢNG CAO TỪ CHỈ TIÊU HÓA LÝ", True, align=C, size=16)
@@ -67,7 +67,7 @@ P("Bộ dữ liệu Wine Quality (UCI) – so sánh phương án cơ sở với 
 for _ in range(5): d.add_paragraph()
 P("Nhóm thực hiện:", True, align=C)
 for m in MEMBERS: P(f"{m['name']} – {m['mssv']}", align=C)
-P("Giảng viên hướng dẫn: ........................................", align=C); P("Năm học 2026", align=C)
+P(f"Giảng viên hướng dẫn: {ADVISOR}", align=C); P("Năm học 2026", align=C)
 d.add_page_break()
 
 # ---------- Tóm tắt ----------

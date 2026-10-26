@@ -3,15 +3,17 @@ from docx import Document
 from docx.shared import Pt, Cm
 from docx.enum.section import WD_ORIENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from members import MEMBERS
+from members import MEMBERS, SCHOOL, ADVISOR
 
 d = Document()
 sec = d.sections[0]; sec.orientation = WD_ORIENT.LANDSCAPE; sec.page_width, sec.page_height = Cm(29.7), Cm(21)
 sec.left_margin = sec.right_margin = Cm(2)
 st = d.styles["Normal"]; st.font.name = "Times New Roman"; st.font.size = Pt(12)
+p = d.add_paragraph(); p.add_run(SCHOOL).bold = True; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 d.add_heading("BẢNG PHÂN CÔNG VÀ TỰ ĐÁNH GIÁ ĐÓNG GÓP", 1).alignment = WD_ALIGN_PARAGRAPH.CENTER
 d.add_paragraph("Đề tài: Nhận dạng rượu vang chất lượng cao từ chỉ tiêu hóa lý (Wine Quality – UCI)")
 d.add_paragraph("Học phần: Nhận dạng mẫu – Bài tập nhóm cuối kỳ")
+d.add_paragraph(f"Giảng viên hướng dẫn: {ADVISOR}")
 
 head = ["TT", "Họ tên", "MSSV", "Nhiệm vụ", "Sản phẩm phụ trách", "Tỉ lệ đóng góp", "Tự đánh giá (/10)"]
 widths = [1, 3.6, 3, 7.2, 6.6, 2.2, 2.1]
@@ -29,9 +31,4 @@ for row in t.rows:
 
 d.add_paragraph()
 d.add_paragraph("Tiêu chí tự đánh giá: mức độ hoàn thành nhiệm vụ, chất lượng sản phẩm, đúng hạn, tham gia thảo luận và hỗ trợ thành viên còn lại.")
-d.add_paragraph("Xác nhận của các thành viên:")
-s = d.add_table(rows=2, cols=len(MEMBERS))
-for i, m in enumerate(MEMBERS):
-    s.cell(0, i).text = m["name"]; s.cell(0, i).paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
-    s.cell(1, i).text = "\n\n(ký, ghi rõ họ tên)"; s.cell(1, i).paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
 d.save("PhanCong_TuDanhGia.docx"); print("ok")

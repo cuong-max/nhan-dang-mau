@@ -1,0 +1,279 @@
+<title>Biên phân lớp rượu vang</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#FBF8F7; --panel:#FFFFFF; --ink:#2B2024; --ink2:#5E5357; --muted:#8A7F83; --line:#E7DFE1;
+  --accent:#5A1E2B; --hi:#9B2C45; --lo:#2272B4; --hiBg:239,201,210; --loBg:201,221,240; --mid:247,243,242;
+  --boundary:#2B2024; --ring:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1C1517; --panel:#251C1F; --ink:#F3ECEE; --ink2:#C7BBBF; --muted:#998C91; --line:#3A2E32;
+  --accent:#E59AAB; --hi:#D9607C; --lo:#3C8FD6; --hiBg:92,40,54; --loBg:30,58,86; --mid:37,28,31;
+  --boundary:#F3ECEE; --ring:#1C1517; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#1C1517; --panel:#251C1F; --ink:#F3ECEE; --ink2:#C7BBBF; --muted:#998C91; --line:#3A2E32;
+  --accent:#E59AAB; --hi:#D9607C; --lo:#3C8FD6; --hiBg:92,40,54; --loBg:30,58,86; --mid:37,28,31;
+  --boundary:#F3ECEE; --ring:#1C1517; color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;padding-inline:16px;padding-block:28px 48px;margin:0}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.num,.mono{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+header{display:flex;flex-direction:column;gap:6px;max-width:760px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin:0;font-weight:700;text-wrap:balance}
+.lede{color:var(--ink2);margin:0;max-width:68ch}
+.models{display:flex;flex-wrap:wrap;gap:6px}
+.models button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink2);padding:6px 11px;border-radius:999px;cursor:pointer}
+.models button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+.models button:focus-visible,.ctl button:focus-visible,input:focus-visible{outline:2px solid var(--lo);outline-offset:2px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:22px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:1fr}}
+.plotbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 10px;position:relative}
+.plothead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.plothead h2{font-size:17px;margin:0;font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block}
+.swb{width:18px;height:0;border-top:2px solid var(--boundary);display:inline-block}
+.swr{width:12px;height:10px;border-radius:2px;display:inline-block;background:rgb(var(--hiBg))}
+canvas{display:block;width:100%;height:auto;touch-action:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-115%)}
+.ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:13px;color:var(--ink2)}
+.ctl button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:5px 12px;border-radius:6px;cursor:pointer}
+.ctl label{display:flex;align-items:center;gap:8px;flex:1;min-width:220px}
+input[type=range]{flex:1;accent-color:var(--accent)}
+aside{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600}
+.idea{margin:0;color:var(--ink2);font-size:14px;min-height:6.2em}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:2px;font-size:12.5px}
+.cm div{padding:7px 8px}
+.cm .h{color:var(--muted);font-size:11.5px}
+.cm .c{background:var(--bg);text-align:right;font-size:15px}
+.cm .c small{display:block;font-family:"Be Vietnam Pro",sans-serif;font-size:11px;color:var(--muted)}
+.cm .good{box-shadow:inset 3px 0 0 var(--hi)}
+.cm .bad{box-shadow:inset 3px 0 0 var(--muted)}
+.mets{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 14px;margin-top:12px}
+.met{display:flex;flex-direction:column}
+.met b{font-size:22px;font-weight:600}
+.met span{font-size:12px;color:var(--muted)}
+.foot{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.real{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+.real h2{font-size:17px;margin:0 0 4px;font-weight:600}
+.real p{margin:0 0 14px;color:var(--ink2);font-size:14px;max-width:80ch}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bar{display:grid;grid-template-columns:minmax(120px,280px) 1fr 52px;gap:10px;align-items:center;font-size:13px;cursor:pointer}
+.bar .t{height:14px;background:var(--bg);border-radius:0 4px 4px 0;position:relative}
+.bar .f{position:absolute;inset:0 auto 0 0;background:var(--muted);border-radius:0 4px 4px 0;transition:width .5s}
+.bar.sel .f{background:var(--hi)}
+.bar.sel{font-weight:600}
+.bar .v{text-align:right}
+@media (max-width:520px){.bar{grid-template-columns:1fr 46px}.bar .t{grid-column:1/-1;grid-row:2}}
+@media (prefers-reduced-motion:reduce){.bar .f{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Nhận dạng mẫu · Wine Quality (UCI)</div>
+    <h1>Mô hình phân biệt rượu vang chất lượng cao như thế nào?</h1>
+    <p class="lede">Mỗi chấm là một mẫu rượu trong tập kiểm tra, đặt theo hai chỉ tiêu mạnh nhất: độ cồn và axit bay hơi. Chọn một mô hình để xem vùng nó gọi là “chất lượng cao” thay đổi ra sao, rồi kéo ngưỡng để đổi giữa bắt sót và báo nhầm.</p>
+  </header>
+
+  <div class="models" id="models" role="group" aria-label="Chọn mô hình"></div>
+
+  <div class="main">
+    <div class="plotbox">
+      <div class="plothead">
+        <h2 id="mname">–</h2>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--hi)"></i>Chất lượng cao (≥ 7 điểm)</span>
+          <span><i class="sw" style="background:var(--lo)"></i>Rượu thường</span>
+          <span><i class="swr"></i>Vùng đoán “cao”</span>
+          <span><i class="swb"></i>Biên quyết định</span>
+        </div>
+      </div>
+      <canvas id="cv" width="1200" height="760" aria-label="Biểu đồ phân tán độ cồn và axit bay hơi với biên quyết định"></canvas>
+      <div class="tip" id="tip" hidden></div>
+      <div class="ctl">
+        <button id="play" type="button">⏸ Dừng tự chạy</button>
+        <button id="replay" type="button">↻ Thả lại dữ liệu</button>
+        <label for="thr">Ngưỡng <input id="thr" type="range" min="5" max="95" value="50"> <span class="num" id="thrv">0,50</span></label>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h3>Ý tưởng của mô hình</h3>
+        <p class="idea" id="idea"></p>
+      </div>
+      <div class="card">
+        <h3>Ma trận nhầm lẫn · <span id="ntest"></span> mẫu kiểm tra</h3>
+        <div class="cm" id="cm"></div>
+        <div class="mets" id="mets"></div>
+        <p class="foot">Viền đậm quanh chấm trên biểu đồ = mẫu bị đoán sai ở ngưỡng hiện tại.</p>
+      </div>
+    </aside>
+  </div>
+
+  <section class="real">
+    <h2>Kết quả thật với đủ 12 đặc trưng</h2>
+    <p>Biểu đồ trên chỉ dùng 2 đặc trưng để vẽ được trên mặt phẳng. Bảng dưới là F1 lớp “chất lượng cao” của cùng các mô hình trong báo cáo, kiểm định chéo trên 5.320 mẫu đã loại trùng với đủ 11 chỉ tiêu hóa lý và loại rượu. Bấm một dòng để xem mô hình đó.</p>
+    <div class="bars" id="bars"></div>
+  </section>
+</div>
+
+<script src="viz_data.js"></script>
+<script>
+(() => {
+const D = window.VIZ, M = D.models, [X0, X1, Y0, Y1] = D.ext, NX = D.nx, NY = D.ny;
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const W = cv.width, H = cv.height, PAD = {l: 86, r: 18, t: 14, b: 70};
+const PW = W - PAD.l - PAD.r, PH = H - PAD.t - PAD.b;
+const sx = x => PAD.l + (x - X0) / (X1 - X0) * PW, sy = y => PAD.t + (1 - (y - Y0) / (Y1 - Y0)) * PH;
+const fmt = (v, d = 2) => v.toFixed(d).replace(".", ",");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+let cur = M.findIndex(m => m.key === "svm"), from = cur, t = 1, thr = .5, playing = !reduce, drop = reduce ? 1 : 0, last = 0, hold = 0, hover = -1;
+const grid = new Float32Array(NX * NY), sc = new Float32Array(D.pts.length);
+const off = document.createElement("canvas"); off.width = NX; off.height = NY; const octx = off.getContext("2d"), img = octx.createImageData(NX, NY);
+const pts = D.pts.map(([x, y, c], i) => ({x, y, c, px: sx(x), py: sy(y), delay: (i % 97) / 97 * .55 + (1 - (y - Y0) / (Y1 - Y0)) * .1}));
+
+// ---- nút chọn mô hình + thanh F1 thật ----
+const mbox = document.getElementById("models"), bars = document.getElementById("bars");
+const maxF = Math.max(...M.map(m => m.real.f1));
+M.forEach((m, i) => {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = m.name.replace(" – mô hình chọn", " ★");
+  b.onclick = () => { select(i); setPlay(false); }; mbox.appendChild(b);
+});
+[...M.keys()].sort((a, b) => M[b].real.f1 - M[a].real.f1).forEach(i => {
+  const m = M[i], r = document.createElement("div"); r.className = "bar"; r.dataset.i = i; r.tabIndex = 0;
+  r.innerHTML = `<span>${m.name}</span><span class="t"><span class="f" style="width:${m.real.f1 / maxF * 100}%"></span></span><span class="v num">${fmt(m.real.f1, 3)}</span>`;
+  r.title = `Recall ${fmt(m.real.rec, 3)} · Precision ${fmt(m.real.prec, 3)} · AUC ${fmt(m.real.auc, 3)}`;
+  r.onclick = r.onkeydown = e => { if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return; e.preventDefault?.(); select(i); setPlay(false); };
+  bars.appendChild(r);
+});
+
+function select(i, instant) {
+  if (i === cur && t >= 1 && !instant) return;
+  // chuyển dần từ trạng thái đang hiển thị
+  if (instant) { fromGrid = fromS = null; t = 1; } else { snapFrom(); t = reduce ? 1 : 0; }
+  from = cur; cur = i; hold = 0;
+  document.querySelectorAll("#models button").forEach((b, k) => b.setAttribute("aria-pressed", k === i));
+  document.querySelectorAll(".bar").forEach(b => b.classList.toggle("sel", +b.dataset.i === i));
+  document.getElementById("mname").textContent = M[i].name;
+  document.getElementById("idea").textContent = M[i].idea;
+  stats();
+}
+let fromGrid = null, fromS = null;
+function snapFrom() { fromGrid = grid.slice(); fromS = sc.slice(); }
+
+// ---- ma trận nhầm lẫn trên toàn bộ tập kiểm tra ----
+function stats() {
+  const s = M[cur].test_s, y = D.test_y, k = thr * 100; let tp = 0, fp = 0, fn = 0, tn = 0;
+  for (let i = 0; i < y.length; i++) { const p = s[i] >= k; if (p && y[i]) tp++; else if (p) fp++; else if (y[i]) fn++; else tn++; }
+  const rec = tp / (tp + fn), prec = tp + fp ? tp / (tp + fp) : 0, f1 = prec + rec ? 2 * prec * rec / (prec + rec) : 0, acc = (tp + tn) / y.length;
+  document.getElementById("ntest").textContent = y.length.toLocaleString("vi-VN");
+  document.getElementById("cm").innerHTML = `<div></div><div class="h">Đoán: cao</div><div class="h">Đoán: thường</div>
+    <div class="h">Thật: cao</div><div class="c num good">${tp}<small>bắt đúng</small></div><div class="c num bad">${fn}<small>bỏ sót</small></div>
+    <div class="h">Thật: thường</div><div class="c num bad">${fp}<small>báo nhầm</small></div><div class="c num">${tn}<small>loại đúng</small></div>`;
+  document.getElementById("mets").innerHTML = [["Recall", rec, "tỉ lệ rượu tốt bắt được"], ["Precision", prec, "đoán “cao” thì đúng bao nhiêu"],
+    ["F1", f1, "cân bằng hai chỉ số trên"], ["Accuracy", acc, "đúng trên toàn bộ"]]
+    .map(([n, v, d]) => `<div class="met"><b class="num">${fmt(v)}</b><span>${n} · ${d}</span></div>`).join("");
+}
+
+// ---- marching squares cho đường biên ----
+function contour(g, k) {
+  const cw = PW / (NX - 1), ch = PH / (NY - 1); ctx.beginPath();
+  const P = (i, j) => [PAD.l + i * cw, PAD.t + PH - j * ch];
+  for (let j = 0; j < NY - 1; j++) for (let i = 0; i < NX - 1; i++) {
+    const a = g[j * NX + i], b = g[j * NX + i + 1], c = g[(j + 1) * NX + i + 1], d = g[(j + 1) * NX + i];
+    const e = [];
+    const edge = (v1, v2, p1, p2) => { if ((v1 >= k) !== (v2 >= k)) { const f = (k - v1) / (v2 - v1); e.push([p1[0] + (p2[0] - p1[0]) * f, p1[1] + (p2[1] - p1[1]) * f]); } };
+    const A = P(i, j), B = P(i + 1, j), C = P(i + 1, j + 1), Dd = P(i, j + 1);
+    edge(a, b, A, B); edge(b, c, B, C); edge(c, d, C, Dd); edge(d, a, Dd, A);
+    for (let q = 0; q + 1 < e.length; q += 2) { ctx.moveTo(...e[q]); ctx.lineTo(...e[q + 1]); }
+  }
+  ctx.stroke();
+}
+
+function axes() {
+  ctx.strokeStyle = css("--line"); ctx.lineWidth = 1; ctx.fillStyle = css("--muted"); ctx.font = "22px 'Be Vietnam Pro', sans-serif";
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  for (let x = 8; x <= 14; x++) { ctx.beginPath(); ctx.moveTo(sx(x), PAD.t); ctx.lineTo(sx(x), PAD.t + PH); ctx.globalAlpha = .45; ctx.stroke(); ctx.globalAlpha = 1; ctx.fillText(x, sx(x), PAD.t + PH + 8); }
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  for (let y = .2; y <= 1.21; y += .2) { ctx.beginPath(); ctx.moveTo(PAD.l, sy(y)); ctx.lineTo(PAD.l + PW, sy(y)); ctx.globalAlpha = .45; ctx.stroke(); ctx.globalAlpha = 1; ctx.fillText(fmt(y, 1), PAD.l - 10, sy(y)); }
+  ctx.fillStyle = css("--ink2"); ctx.font = "24px 'Be Vietnam Pro', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+  ctx.fillText(D.fx + " →", PAD.l + PW / 2, H - 4);
+  ctx.save(); ctx.translate(24, PAD.t + PH / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = "middle"; ctx.fillText(D.fy + " →", 0, 0); ctx.restore();
+}
+
+const rgb = n => css(n).split(",").map(Number);
+function frame(now) {
+  const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+  if (t < 1) t = Math.min(1, t + dt / .9);
+  if (drop < 1) drop = Math.min(1, drop + dt / 1.6);
+  if (playing && t >= 1 && drop >= 1) { hold += dt; if (hold > 3.2) select((cur + 1) % M.length); }
+  const e = t * t * (3 - 2 * t), G = M[cur].grid, S = M[cur].s;
+  for (let i = 0; i < grid.length; i++) grid[i] = ((fromGrid ? fromGrid[i] : G[i]) * (1 - e) + G[i] * e) / 100;
+  for (let i = 0; i < sc.length; i++) sc[i] = ((fromS ? fromS[i] : S[i]) * (1 - e) + S[i] * e) / 100;
+
+  // nền: tô vùng đoán theo điểm số, đậm dần khi xa ngưỡng
+  const hi = rgb("--hiBg"), lo = rgb("--loBg"), mid = rgb("--mid");
+  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+    const v = grid[j * NX + i], o = ((NY - 1 - j) * NX + i) * 4;
+    const k = v >= thr ? Math.min(1, (v - thr) / Math.max(.05, 1 - thr) * 1.6 + .25) : Math.min(1, (thr - v) / Math.max(.05, thr) * 1.6 + .25);
+    const c = v >= thr ? hi : lo;
+    img.data[o] = mid[0] + (c[0] - mid[0]) * k; img.data[o + 1] = mid[1] + (c[1] - mid[1]) * k; img.data[o + 2] = mid[2] + (c[2] - mid[2]) * k; img.data[o + 3] = 255;
+  }
+  octx.putImageData(img, 0, 0);
+  ctx.clearRect(0, 0, W, H); ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(off, PAD.l, PAD.t, PW, PH);
+  axes();
+
+  const cHi = css("--hi"), cLo = css("--lo"), ring = css("--ink");
+  ctx.save(); ctx.beginPath(); ctx.rect(PAD.l, PAD.t, PW, PH); ctx.clip();
+  for (let pass = 0; pass < 2; pass++) for (let i = 0; i < pts.length; i++) {
+    const p = pts[i]; if (p.c !== pass) continue;
+    const d = Math.max(0, Math.min(1, (drop - p.delay) / .35)); if (d <= 0) continue;
+    const ee = 1 - Math.pow(1 - d, 3), y = PAD.t - 20 + (p.py - PAD.t + 20) * ee;
+    const wrong = drop >= 1 && ((sc[i] >= thr) !== (p.c === 1));
+    ctx.globalAlpha = p.c ? .95 : .7 * ee + .0;
+    ctx.beginPath(); ctx.arc(p.px, y, p.c ? 6 : 4.5, 0, 7);
+    ctx.fillStyle = p.c ? cHi : cLo; ctx.fill();
+    if (wrong) { ctx.lineWidth = 1.8; ctx.strokeStyle = ring; ctx.stroke(); }
+    if (i === hover) { ctx.globalAlpha = 1; ctx.lineWidth = 3; ctx.strokeStyle = css("--ink"); ctx.beginPath(); ctx.arc(p.px, y, 10, 0, 7); ctx.stroke(); }
+  }
+  ctx.restore(); ctx.globalAlpha = 1;
+  ctx.strokeStyle = css("--boundary"); ctx.lineWidth = 3.5; ctx.lineJoin = "round";
+  if (drop >= 1) contour(grid, thr);
+  requestAnimationFrame(frame);
+}
+
+// ---- tương tác ----
+const thrEl = document.getElementById("thr"), thrv = document.getElementById("thrv");
+thrEl.oninput = () => { thr = thrEl.value / 100; thrv.textContent = fmt(thr); stats(); };
+const playBtn = document.getElementById("play");
+function setPlay(v) { playing = v; hold = 0; playBtn.textContent = v ? "⏸ Dừng tự chạy" : "▶ Tự chạy qua các mô hình"; }
+playBtn.onclick = () => setPlay(!playing); setPlay(playing);
+document.getElementById("replay").onclick = () => { drop = reduce ? 1 : 0; };
+
+const tip = document.getElementById("tip");
+cv.addEventListener("pointermove", e => {
+  const r = cv.getBoundingClientRect(), mx = (e.clientX - r.left) * W / r.width, my = (e.clientY - r.top) * H / r.height;
+  let best = -1, bd = 18 * 18;
+  pts.forEach((p, i) => { const d = (p.px - mx) ** 2 + (p.py - my) ** 2; if (d < bd) { bd = d; best = i; } });
+  hover = best;
+  if (best < 0) { tip.hidden = true; return; }
+  const p = pts[best], pred = sc[best] >= thr;
+  tip.innerHTML = `${p.c ? "Chất lượng cao" : "Rượu thường"} · cồn ${fmt(p.x, 1)}% · axit ${fmt(p.y, 2)} g/L<br>Điểm mô hình ${fmt(sc[best])} → đoán “${pred ? "cao" : "thường"}” ${pred === !!p.c ? "✓" : "✗"}`;
+  tip.style.left = (p.px * r.width / W + cv.offsetLeft) + "px"; tip.style.top = (p.py * r.height / H + cv.offsetTop) + "px"; tip.hidden = false;
+});
+cv.addEventListener("pointerleave", () => { hover = -1; tip.hidden = true; });
+
+select(cur, true); requestAnimationFrame(frame);
+})();
+</script>
